@@ -8,8 +8,8 @@ namespace Tests
     {
         private Javlibrary.Client client;
 
-        [SetUp]
-        public void Setup()
+        [OneTimeSetUp]
+        public void OneTimeSetup()
         {
             client = new Javlibrary.Client();
         }
