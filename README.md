@@ -14,6 +14,7 @@ var video2 = await client.LoadVideo(results.FirstOrDefault().url);
 
 foreach(var video in await client.Search("ABP"))
     System.Console.WriteLine(video.Title);
+```
 
 # License
 Licensed under AGPL-3.0-only
