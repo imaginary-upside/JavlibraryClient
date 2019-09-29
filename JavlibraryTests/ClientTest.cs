@@ -29,15 +29,56 @@ namespace Tests
         {
             var results = await client.Search("HND-723");
 
-            Assert.AreEqual(results.Count(), 1);
             Assert.AreEqual(results.ElementAt(0).code, "HND-723");
             Assert.AreEqual(results.ElementAt(0).url, "https://www.javlibrary.com/en/?v=javli6laqy");
         }
 
         [Test]
-        public async Task TestLoadNormalizeTitle()
+        public async Task TestSearchFirstNoResults()
         {
-            var result = await client.Load("javli6lg24");
+            var result = await client.SearchFirst("HND-999");
+
+            Assert.AreEqual(null, result);
+        }
+
+        [Test]
+        public async Task TestSearchFirstSingleResult()
+        {
+            var result = await client.SearchFirst("SSNI-230");
+
+            var correct = new Javlibrary.Video(
+                id: "javli7bvzi",
+                code: "SSNI-230",
+                title: "Big Slap Brilliantly Seductive Ass Pub Miss",
+                actresses: new[] { "Hoshino Nami" },
+                genres: new[] { "Solowork", "Nasty, Hardcore", "Cowgirl", "Prostitutes", "Butt", "Risky Mosaic", "Huge Butt" },
+                studio: "S1 NO.1 STYLE"
+            );
+
+            Assert.AreEqual(correct, result);
+        }
+
+        [Test]
+        public async Task TestSearchFirstManyResults()
+        {
+            var result = await client.SearchFirst("SSNI");
+
+            var correct = new Javlibrary.Video(
+                id: "javliktz34",
+                code: "SSNI-001",
+                title: "Liberalization Bans Lifted! ! Ji ● Po 24 Vs. Aoi Always Seeking Meat Sticks Ikashi Going Nonstop Mass Ejaculation 25 Hit Super Heavyweight Special",
+                actresses: new[] { "Aoi" },
+                genres: new[] { "Solowork", "Big Tits", "Nasty, Hardcore", "Facials", "Breasts", "Promiscuity", "Risky Mosaic" },
+                studio: "S1 NO.1 STYLE"
+            );
+
+            Assert.AreEqual(correct, result);
+        }
+
+        [Test]
+        public async Task TestLoadVideoNormalizeTitle()
+        {
+            var result = await client.LoadVideo("javli6lg24");
 
             var correct = new Javlibrary.Video(
                 id: "javli6lg24",
@@ -52,9 +93,9 @@ namespace Tests
         }
 
         [Test]
-        public async Task TestLoadOneActress()
+        public async Task TestLoadVideoOneActress()
         {
-            var result = await client.Load("javlio354u");
+            var result = await client.LoadVideo("javlio354u");
 
             var correct = new Javlibrary.Video(
                 id: "javlio354u",
@@ -69,9 +110,9 @@ namespace Tests
         }
 
         [Test]
-        public async Task TestLoadManyActresses()
+        public async Task TestLoadVideoManyActresses()
         {
-            var result = await client.Load("javli6bm5q");
+            var result = await client.LoadVideo("javli6bm5q");
 
             var correct = new Javlibrary.Video(
                 id: "javli6bm5q",
@@ -86,9 +127,9 @@ namespace Tests
         }
 
         [Test]
-        public async Task TestLoadNoActresses()
+        public async Task TestLoadVideoNoActresses()
         {
-            var result = await client.Load("javliarg3u");
+            var result = await client.LoadVideo("javliarg3u");
 
             var correct = new Javlibrary.Video(
                 id: "javliarg3u",

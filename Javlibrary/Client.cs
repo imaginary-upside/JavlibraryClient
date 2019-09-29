@@ -1,4 +1,5 @@
 using AngleSharp;
+using AngleSharp.Dom;
 using CloudflareSolverRe;
 using System;
 using System.Net.Http;
@@ -9,6 +10,7 @@ using System.Collections.Generic;
 
 namespace Javlibrary
 {
+    /// <summary>A web scraping client for javlibrary.com</summary>
     public class Client
     {
         private readonly HttpClient httpClient;
@@ -21,11 +23,21 @@ namespace Javlibrary
             context = BrowsingContext.New();
         }
 
-        public async Task<IEnumerable<(string code, Uri url)>> Search(string code)
+        /// <summary>Searches by the specified identifier.</summary>
+        /// <param name="identifier">The identifier to search for.</param>
+        /// <returns>An array of tuples representing each video returned during the search.</returns>
+        /// <example>
+        /// <code>
+        /// var client = new Javlibrary.Client();
+        /// var results = client.Search("abp");
+        /// results.Count // 20
+        /// results[10].code // ABP-011
+        /// results[10].url // https://http://www.javlibrary.com/en/?v=javlijdqrm
+        /// </code>
+        /// </example>
+        public async Task<IEnumerable<(string code, Uri url)>> Search(string identifier)
         {
-            var response = await httpClient.GetAsync("http://www.javlibrary.com/en/vl_searchbyid.php?keyword=" + code);
-            var html = await response.Content.ReadAsStringAsync();
-            var doc = await context.OpenAsync(req => req.Content(html));
+            var doc = await LoadPage("https://www.javlibrary.com/en/vl_searchbyid.php?keyword=" + identifier);
 
             // if only one result was found, and so we were taken directly to the video page.
             if (doc.QuerySelector("#video_id") != null)
@@ -37,33 +49,92 @@ namespace Javlibrary
 
             return doc.QuerySelectorAll(".video").Select(n =>
             {
-                var resultCode = n.QuerySelector(".id").TextContent;
+                var code = n.QuerySelector(".id").TextContent;
                 var url = new Uri("https://www.javlibrary.com/en/" + n.QuerySelector("a")?.GetAttribute("href"));
-                return (resultCode, url);
+                return (code, url);
             });
         }
 
-        public async Task<Video> Load(string id)
+        /// <summary>Searches for a specific JAV code, and returns the first result.</summary>
+        /// <param name="code">The JAV to search for.</param>
+        /// <returns>The first result of the search, or null if nothing was found.</returns>
+        /// <example>
+        /// <code>
+        /// var client = new Javlibrary.Client();
+        /// var result = client.SearchFirst("ABP-020");
+        /// result.Id // javlijazsu
+        /// result.Title // Fan Fan PRESTIGE Large Thanksgiving Soil And Shiro To Spree Yamakawa Blue Sky Meets Escalate! Basutsua ~
+        /// </code>
+        /// </example>
+        public async Task<Video?> SearchFirst(string code)
         {
-            return await Load(new Uri("http://www.javlibrary.com/en/?v=" + id));
+            var doc = await LoadPage("http://www.javlibrary.com/en/vl_searchbyid.php?keyword=" + code);
+
+            if (doc.QuerySelector("p em")?.TextContent == "Search returned no result.")
+                return null;
+
+            // if only one result was found, and so we were taken directly to the video page.
+            if (doc.QuerySelector("#video_id") != null)
+                return ParseVideoPage(doc);
+
+            return await LoadVideo(new Uri("https://www.javlibrary.com/en/" + doc.QuerySelector(".video a")?.GetAttribute("href")));
         }
 
-        public async Task<Video> Load(Uri url)
+        /// <summary>Loads a specific JAV by id</summary>
+        /// <param name="id">The JavLibrary spcific JAV identifier</param>
+        /// <returns>The parsed video, or null if no video with <c>id</c> exists.</returns>
+        /// <example>
+        /// <code>
+        /// var client = new Javlibrary.Client();
+        /// var result = client.LoadVideo("javlijazsu");
+        /// result.Id // javlijazsu
+        /// result.Title // Fan Fan PRESTIGE Large Thanksgiving Soil And Shiro To Spree Yamakawa Blue Sky Meets Escalate! Basutsua ~
+        /// </code>
+        /// </example>
+        public async Task<Video> LoadVideo(string id)
+        {
+            return await LoadVideo(new Uri("https://www.javlibrary.com/en/?v=" + id));
+        }
+
+        /// <summary>Loads a specific JAV by url</summary>
+        /// <param name="url">The JAV url</param>
+        /// <returns>The parsed video, or null if no video at <c>url</c> exists.</returns>
+        /// <example>
+        /// <code>
+        /// var client = new Javlibrary.Client();
+        /// var result = client.LoadVideo(new Url("http://www.javlibrary.com/en/?v=javlijazsu"));
+        /// result.Id // javlijazsu
+        /// result.Title // Fan Fan PRESTIGE Large Thanksgiving Soil And Shiro To Spree Yamakawa Blue Sky Meets Escalate! Basutsua ~
+        /// </code>
+        /// </example>
+        public async Task<Video> LoadVideo(Uri url)
         {
             var response = await httpClient.GetAsync(url);
             var html = await response.Content.ReadAsStringAsync();
             var doc = await context.OpenAsync(req => req.Content(html));
+            return ParseVideoPage(doc);
+        }
 
-            var id = HttpUtility.ParseQueryString(url.Query)["v"];
+        private async Task<IDocument> LoadPage(string url)
+        {
+            var response = await httpClient.GetAsync(url);
+            var html = await response.Content.ReadAsStringAsync();
+            return await context.OpenAsync(req => req.Content(html));
+        }
+
+        private Video ParseVideoPage(IDocument doc)
+        {
+            var id = HttpUtility.ParseQueryString(
+                new Uri("https://www.javlibrary.com" + doc.QuerySelector("#video_title a")?.GetAttribute("href")).Query
+            )["v"];
             var code = doc.QuerySelector("#video_id .text")?.TextContent;
             var actresses = doc.QuerySelectorAll(".star a").Select(n => n.TextContent);
             var title = doc.QuerySelector("#video_title a")?
                            .TextContent
                            .Replace(code, "")
-                           // Replace refuses to take empty string as 1st param.
-                           // So just using utf zero width char as fallback.
-                           .Replace(actresses.FirstOrDefault() ?? "\u200B", "")
-                           .Replace(ReverseName(actresses.FirstOrDefault() ?? "\u200B"), "")
+                           .TrimStart(' ')
+                           .Trim(actresses.FirstOrDefault())
+                           .Trim(ReverseName(actresses.FirstOrDefault()))
                            .Trim();
             var genres = doc.QuerySelectorAll(".genre a").Select(n => n.TextContent);
             var studio = doc.QuerySelector("#video_maker a")?.TextContent;
@@ -78,8 +149,11 @@ namespace Javlibrary
             );
         }
 
-        private string ReverseName(in string name)
+        private static string ReverseName(in string name)
         {
+            if (name == null)
+                return null;
+
             return String.Join(" ", name.Split(' ').Reverse());
         }
     }
