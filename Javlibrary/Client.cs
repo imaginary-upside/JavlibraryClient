@@ -138,6 +138,8 @@ namespace Javlibrary
                            .Trim();
             var genres = doc.QuerySelectorAll(".genre a").Select(n => n.TextContent);
             var studio = doc.QuerySelector("#video_maker a")?.TextContent;
+            var boxArt = doc.QuerySelector("#video_jacket_img")?.GetAttribute("src")?.Insert(0, "https:");
+            var cover = boxArt.Replace("pl.jpg", "ps.jpg");
 
             return new Video(
                 id: id,
@@ -145,7 +147,9 @@ namespace Javlibrary
                 title: title,
                 actresses: actresses,
                 genres: genres,
-                studio: studio
+                studio: studio,
+                boxArt: boxArt,
+                cover: cover
             );
         }
 

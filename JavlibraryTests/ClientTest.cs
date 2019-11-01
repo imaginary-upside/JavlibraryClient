@@ -52,7 +52,9 @@ namespace Tests
                 title: "Big Slap Brilliantly Seductive Ass Pub Miss",
                 actresses: new[] { "Hoshino Nami" },
                 genres: new[] { "Solowork", "Nasty, Hardcore", "Cowgirl", "Prostitutes", "Butt", "Risky Mosaic", "Huge Butt" },
-                studio: "S1 NO.1 STYLE"
+                studio: "S1 NO.1 STYLE",
+                boxArt: "https://pics.dmm.co.jp/mono/movie/adult/ssni230/ssni230pl.jpg",
+                cover: "https://pics.dmm.co.jp/mono/movie/adult/ssni230/ssni230ps.jpg"
             );
 
             Assert.AreEqual(correct, result);
@@ -69,7 +71,9 @@ namespace Tests
                 title: "A Big Ass Pantyhose Woman Who Is Exposed So Much That There Is No Plump",
                 actresses: new[] { "Koizumi Hinata" },
                 genres: new[] { "Cosplay", "Solowork", "Beautiful Girl", "Huge Butt" },
-                studio: "SOD Create"
+                studio: "SOD Create",
+                boxArt: "https://pics.dmm.co.jp/mono/movie/adult/1stars126/1stars126pl.jpg",
+                cover: "https://pics.dmm.co.jp/mono/movie/adult/1stars126/1stars126ps.jpg"
             );
 
             Assert.AreEqual(result, correct);
@@ -86,7 +90,9 @@ namespace Tests
                 title: "NEW TOKYO Style 01 Aika Phosphorus",
                 actresses: new[] { "Aikarin" },
                 genres: new[] { "Handjob", "Solowork", "Facials" },
-                studio: "Prestige"
+                studio: "Prestige",
+                boxArt: "https://pics.dmm.co.jp/mono/movie/adult/118abp002/118abp002pl.jpg",
+                cover: "https://pics.dmm.co.jp/mono/movie/adult/118abp002/118abp002ps.jpg"
             );
 
             Assert.AreEqual(result, correct);
@@ -103,7 +109,9 @@ namespace Tests
                 title: "Room Boundaries-If It Were In This Way, I Would Like It!To",
                 actresses: new[] { "Kurata Mao", "Mihara Honoka", "Kururigi Aoi" },
                 genres: new[] { "Cosplay", "Planning", "Cum", "Hypnosis" },
-                studio: "SOD Create"
+                studio: "SOD Create",
+                boxArt: "https://pics.dmm.co.jp/mono/movie/adult/1sdde592/1sdde592pl.jpg",
+                cover: "https://pics.dmm.co.jp/mono/movie/adult/1sdde592/1sdde592ps.jpg"
             );
 
             Assert.AreEqual(result, correct);
@@ -120,7 +128,9 @@ namespace Tests
                 title: "Goddesses Of The Speed Of Sound 01 RQ'S Cafe",
                 actresses: new string[] { },
                 genres: new[] { "Mini Skirt", "Big Tits", "Slender", "Race Queen", "Digital Mosaic" },
-                studio: "IDEA POCKET"
+                studio: "IDEA POCKET",
+                boxArt: "https://pics.dmm.co.jp/mono/movie/adult/iptd041/iptd041pl.jpg",
+                cover: "https://pics.dmm.co.jp/mono/movie/adult/iptd041/iptd041ps.jpg"
             );
 
             Assert.AreEqual(result, correct);
