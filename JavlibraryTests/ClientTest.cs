@@ -59,23 +59,6 @@ namespace Tests
         }
 
         [Test]
-        public async Task TestSearchFirstManyResults()
-        {
-            var result = await client.SearchFirst("SSNI");
-
-            var correct = new Javlibrary.Video(
-                id: "javliktz34",
-                code: "SSNI-001",
-                title: "Liberalization Bans Lifted! ! Ji ● Po 24 Vs. Aoi Always Seeking Meat Sticks Ikashi Going Nonstop Mass Ejaculation 25 Hit Super Heavyweight Special",
-                actresses: new[] { "Aoi" },
-                genres: new[] { "Solowork", "Big Tits", "Nasty, Hardcore", "Facials", "Breasts", "Promiscuity", "Risky Mosaic" },
-                studio: "S1 NO.1 STYLE"
-            );
-
-            Assert.AreEqual(correct, result);
-        }
-
-        [Test]
         public async Task TestLoadVideoNormalizeTitle()
         {
             var result = await client.LoadVideo("javli6lg24");
