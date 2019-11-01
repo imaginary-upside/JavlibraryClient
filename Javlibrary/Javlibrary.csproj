@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Javlibrary</PackageId>
+    <Authors>imaginay-upside</Authors>
+    <Version>0.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
