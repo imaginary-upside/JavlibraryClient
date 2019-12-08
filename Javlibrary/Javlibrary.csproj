@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="anglesharp" Version="0.13.0" />
-    <PackageReference Include="CloudflareSolverRe" Version="1.0.5" />
+    <PackageReference Include="CloudflareSolverRe" Version="1.0.6" />
   </ItemGroup>
 
   <PropertyGroup>
