@@ -70,7 +70,8 @@ namespace Javlibrary
         {
             var doc = await LoadPage("http://www.javlibrary.com/en/vl_searchbyid.php?keyword=" + code);
 
-            if (doc.QuerySelector("p em")?.TextContent == "Search returned no result.")
+            if (doc.QuerySelector("p em")?.TextContent == "Search returned no result." ||
+                doc.QuerySelector("#badalert td")?.TextContent == "The search term you entered is invalid. Please try a different term.")
                 return null;
 
             // if only one result was found, and so we were taken directly to the video page.

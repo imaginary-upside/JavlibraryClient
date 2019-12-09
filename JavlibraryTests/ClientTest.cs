@@ -42,6 +42,14 @@ namespace Tests
         }
 
         [Test]
+        public async Task TestSearchFirstInvalid()
+        {
+            var result = await client.SearchFirst("259LUXU-1142");
+
+            Assert.AreEqual(null, result);
+        }
+
+        [Test]
         public async Task TestSearchFirstSingleResult()
         {
             var result = await client.SearchFirst("SSNI-230");
